@@ -28,6 +28,7 @@ module sm_cpu
     wire [ 2:0] aluControl;
     wire        jump;
     wire [31:0] jumpDst;
+    wire        ext;
  
     //program counter
     wire [31:0] pc;
@@ -70,8 +71,13 @@ module sm_cpu
     wire [31:0] signImm = { {16 { instr[15] }}, instr[15:0] };
     assign pcBranch = pcNext + signImm;
 
+    //zero extension
+    wire [31:0] zeroImm = { {16 { 1'b0 } }, instr[15:0]};
+
+    wire [31:0] imm = ext ? zeroImm : signImm;
+
     //alu
-    wire [31:0] srcB = aluSrc ? signImm : rd2;
+    wire [31:0] srcB = aluSrc ? imm : rd2;
 
     sm_alu alu
     (
@@ -94,7 +100,8 @@ module sm_cpu
         .regWrite   ( regWrite     ), 
         .aluSrc     ( aluSrc       ),
         .aluControl ( aluControl   ),
-        .jump       ( jump         )
+        .jump       ( jump         ),
+        .ext        ( ext          )
     );
 
 endmodule
@@ -109,7 +116,8 @@ module sm_control
     output reg       regWrite, 
     output reg       aluSrc,
     output reg [2:0] aluControl,
-    output reg       jump
+    output reg       jump,
+    output reg       ext
 );
     reg          branch;
     reg          condZero;
@@ -123,6 +131,7 @@ module sm_control
         aluSrc      = 1'b0;
         aluControl  = `ALU_ADD;
         jump        = 1'b0;
+        ext         = 1'b0;
 
         casez( {cmdOper,cmdFunk} )
             default               : ;
@@ -135,6 +144,7 @@ module sm_control
 
             { `C_ADDIU, `F_ANY  } : begin regWrite = 1'b1; aluSrc = 1'b1; aluControl = `ALU_ADD;  end
             { `C_LUI,   `F_ANY  } : begin regWrite = 1'b1; aluSrc = 1'b1; aluControl = `ALU_LUI;  end
+            { `C_ORI,   `F_ANY  } : begin regWrite = 1'b1; aluSrc = 1'b1; aluControl = `ALU_OR; ext = 1'b1;  end
 
             { `C_BEQ,   `F_ANY  } : begin branch = 1'b1; condZero = 1'b1; aluControl = `ALU_SUBU; end
             { `C_BNE,   `F_ANY  } : begin branch = 1'b1; aluControl = `ALU_SUBU; end

@@ -26,6 +26,8 @@
                               //         Rt = Immed << 16
 `define C_BNE       6'b000101 // I-type, Branch on Not Equal
                               //         if (Rs != Rt) PC += (int)offset
+`define C_ORI       6'b001101 // I-type, Or Immediate
+                              //         Rt = Rs || ZeroImm
 
 //instruction function field
 `define F_ADDU      6'b100001 // R-type, Integer Add Unsigned
