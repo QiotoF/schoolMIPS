@@ -96,7 +96,8 @@ module sm_testbench;
 
                 { `C_SPEC,  `F_ADDU } : $write ("addu  $%1d, $%1d, $%1d", cmdRd, cmdRs, cmdRt);
                 { `C_SPEC,  `F_OR   } : $write ("or    $%1d, $%1d, $%1d", cmdRd, cmdRs, cmdRt);
-                { `C_SPEC,  `F_SRL  } : $write ("srl   $%1d, $%1d, $%1d", cmdRd, cmdRs, cmdRt);
+                { `C_SPEC,  `F_SRL  } : $write ("srl   $%1d, $%1d, %1d", cmdRd, cmdRs, cmdSa);
+                { `C_SPEC,  `F_SLL  } : $write ("sll   $%1d, $%1d, %1d", cmdRd, cmdRs, cmdSa);
                 { `C_SPEC,  `F_SLTU } : $write ("sltu  $%1d, $%1d, $%1d", cmdRd, cmdRs, cmdRt);
                 { `C_SPEC,  `F_SUBU } : $write ("subu  $%1d, $%1d, $%1d", cmdRd, cmdRs, cmdRt);
 
