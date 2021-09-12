@@ -138,6 +138,7 @@ module sm_control
 
             { `C_SPEC,  `F_ADDU } : begin regDst = 1'b1; regWrite = 1'b1; aluControl = `ALU_ADD;  end
             { `C_SPEC,  `F_OR   } : begin regDst = 1'b1; regWrite = 1'b1; aluControl = `ALU_OR;   end
+            { `C_SPEC,  `F_AND  } : begin regDst = 1'b1; regWrite = 1'b1; aluControl = `ALU_AND;  end
             { `C_SPEC,  `F_SRL  } : begin regDst = 1'b1; regWrite = 1'b1; aluControl = `ALU_SRL;  end
             { `C_SPEC,  `F_SLL  } : begin regDst = 1'b1; regWrite = 1'b1; aluControl = `ALU_SLL;  end
             { `C_SPEC,  `F_SLTU } : begin regDst = 1'b1; regWrite = 1'b1; aluControl = `ALU_SLTU; end
@@ -170,6 +171,7 @@ module sm_alu
             default   : result = srcA + srcB;
             `ALU_ADD  : result = srcA + srcB;
             `ALU_OR   : result = srcA | srcB;
+            `ALU_AND  : result = srcA & srcB;
             `ALU_LUI  : result = (srcB << 16);
             `ALU_SRL  : result = srcB >> shift;
             `ALU_SLTU : result = (srcA < srcB) ? 1 : 0;

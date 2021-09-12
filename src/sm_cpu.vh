@@ -16,6 +16,7 @@
 `define ALU_SLTU    3'b100
 `define ALU_SUBU    3'b101
 `define ALU_SLL     3'b110
+`define ALU_AND     3'b111
 
 //instruction operation code
 `define C_SPEC      6'b000000 // Special instructions (depends on function field)
@@ -35,6 +36,8 @@
                               //         Rd = Rs + Rt
 `define F_OR        6'b100101 // R-type, Logical OR
                               //         Rd = Rs | Rt
+`define F_AND       6'b100100 // R-type, Logical AND
+                              //         Rd = Rs & Rt
 `define F_SRL       6'b000010 // R-type, Shift Right Logical
                               //         Rd = Rs∅ >> shift
 `define F_SLL       6'b000000 // R-type, Shift Left Logical
