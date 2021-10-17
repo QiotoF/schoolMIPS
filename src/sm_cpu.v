@@ -17,7 +17,8 @@ module sm_cpu
     input   [ 4:0]  regAddr,    // debug access reg address
     output  [31:0]  regData,    // debug access reg data
     output  [31:0]  imAddr,     // instruction memory address
-    input   [31:0]  imData      // instruction memory data
+    input   [31:0]  imData,     // instruction memory data
+    input   [ 7:0]  input_8bit  // non-architectural 8 bit input
 );
     //control wires
     wire        pcSrc;
@@ -29,6 +30,7 @@ module sm_cpu
     wire        jump;
     wire [31:0] jumpDst;
     wire        ext;
+    wire        load8;
  
     //program counter
     wire [31:0] pc;
@@ -50,6 +52,10 @@ module sm_cpu
     wire [31:0] rd1;
     wire [31:0] rd2;
     wire [31:0] wd3;
+
+    wire [31:0] aluResult;
+    wire [31:0] extended_8bit = { {24 { 1'b0 }}, input_8bit };
+    assign wd3 = (load8 == 1) ? extended_8bit : aluResult;
 
     sm_register_file rf
     (
@@ -86,7 +92,7 @@ module sm_cpu
         .oper       ( aluControl   ),
         .shift      ( instr[10:6 ] ),
         .zero       ( aluZero      ),
-        .result     ( wd3          ) 
+        .result     ( aluResult    ) 
     );
 
     //control
@@ -101,7 +107,8 @@ module sm_cpu
         .aluSrc     ( aluSrc       ),
         .aluControl ( aluControl   ),
         .jump       ( jump         ),
-        .ext        ( ext          )
+        .ext        ( ext          ),
+        .load8      ( load8        )
     );
 
 endmodule
@@ -117,7 +124,8 @@ module sm_control
     output reg       aluSrc,
     output reg [2:0] aluControl,
     output reg       jump,
-    output reg       ext
+    output reg       ext,
+    output reg       load8
 );
     reg          branch;
     reg          condZero;
@@ -132,6 +140,7 @@ module sm_control
         aluControl  = `ALU_ADD;
         jump        = 1'b0;
         ext         = 1'b0;
+        load8       = 1'b0;
 
         casez( {cmdOper,cmdFunk} )
             default               : ;
@@ -152,6 +161,7 @@ module sm_control
             { `C_BNE,   `F_ANY  } : begin branch = 1'b1; aluControl = `ALU_SUBU; end
 
             { `C_SPEC,  `F_JR   } : begin jump = 1'b1; end
+            { `C_SPEC,  `F_LOAD } : begin regDst = 1'b1; regWrite = 1'b1; load8 = 1'b1; end
         endcase
     end
 endmodule

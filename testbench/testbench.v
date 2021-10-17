@@ -17,6 +17,7 @@ module sm_testbench;
     reg  [ 4:0] regAddr;
     wire [31:0] regData;
     wire        cpuClk;
+    reg  [ 7:0] input_8bit;
 
     // ***** DUT start ************************
 
@@ -28,7 +29,8 @@ module sm_testbench;
         .clkEnable ( 1'b1    ),
         .clk       ( cpuClk  ),
         .regAddr   ( regAddr ),
-        .regData   ( regData )
+        .regData   ( regData ),
+        .input_8bit( input_8bit)
     );
 
     defparam sm_top.sm_clk_divider.bypass = 1;
@@ -86,6 +88,8 @@ module sm_testbench;
             cmdImm  = instr[15:0 ];
             cmdImmS = instr[15:0 ];
 
+            input_8bit = 8'b11001100;
+
             $write("   ");
 
             casez( {cmdOper,cmdFunk} )
@@ -110,6 +114,7 @@ module sm_testbench;
                 { `C_BNE,   `F_ANY  } : $write ("bne   $%1d, $%1d, %1d", cmdRs, cmdRt, cmdImmS + 1);
 
                 { `C_SPEC,  `F_JR   } : $write ("jr    $%1d", cmdRs);
+                { `C_SPEC,  `F_LOAD } : $write ("load %1d into $%1d", input_8bit, cmdRd);
             endcase
         end
 

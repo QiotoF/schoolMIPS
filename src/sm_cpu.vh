@@ -48,4 +48,7 @@
                               //         Rd = Rs – Rt
 `define F_JR        6'b001000 // R-type, Jump Register
                               //         PC = Rs
+`define F_LOAD      6'b111111 // R-type, Load 8-bit input 
+                              //         Rd = 8bit_input
 `define F_ANY       6'b??????
+
