@@ -51,4 +51,3 @@
 `define F_LOAD      6'b111111 // R-type, Load 8-bit input 
                               //         Rd = 8bit_input
 `define F_ANY       6'b??????
-

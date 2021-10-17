@@ -11,6 +11,7 @@ module sm_testbench;
 
     // simulation options
     parameter Tt     = 20;
+    parameter INPUT_8_BIT = 8'b00010000;
 
     reg         clk;
     reg         rst_n;
@@ -88,7 +89,7 @@ module sm_testbench;
             cmdImm  = instr[15:0 ];
             cmdImmS = instr[15:0 ];
 
-            input_8bit = 8'b11001100;
+            input_8bit = INPUT_8_BIT;
 
             $write("   ");
 
